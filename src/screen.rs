@@ -34,6 +34,7 @@ impl Screen {
     }
     pub fn draw(&self, things: &World) {
         self.surface.flip();
+        self.surface.fill(Color::RGB(0,0,0));
         self.draw_square(things.get_player().get_rect(), (255,0,255));
         for t in things.get_things() {
             self.draw_square(t.get_rect(), (255,255,255));
