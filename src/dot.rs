@@ -21,12 +21,17 @@ impl Dot {
     pub fn accelerate(&mut self) {
         self.vel = self.vel + self.acc;
     }
-    pub fn get_force(self, dot: Dot) -> Vect {
-        let x = dot.pos.x - self.pos.x;
-        let y = dot.pos.y - self.pos.y;
-        Vect {x: x, y: y}
-    }
     pub fn set_force(&mut self, vect: Vect) {
         self.acc = vect;
+    }
+    pub fn get_pos(&self) -> Vect {
+        self.pos
+    }
+    pub fn apply_friction(&mut self, k: f64) {
+        println!("{} {}", self.acc.x, self.acc.y);
+        let mut v = self.vel.clone();
+        let acc = self.acc;
+        v.scale(-k);
+        self.set_force(acc+v);
     }
 }

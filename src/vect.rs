@@ -22,7 +22,7 @@ impl Sub for Vect {
 
 impl Vect {
     pub fn size(&self) -> f64 {
-        (self.x*self.x + self.y* self.y).sqrt()
+        (self.x*self.x + self.y*self.y).sqrt()
     }
     pub fn scale(&mut self, r: f64) {
         self.x *= r;

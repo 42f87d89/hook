@@ -1,23 +1,22 @@
-use ::sdl::Rect;
 use drawable::Drawable;
 use tickable::Tickable;
 
-pub struct Platform {
+pub struct Platform<'a> {
     rect: Rect,
 }
 
-impl Platform {
+impl<'a> Platform<'a> {
     pub fn new(x: i16, y: i16) -> Self {
         Platform {rect: Rect {x: x, y: y, w: 20, h: 10}}
     }
 }
 
-impl Tickable for Platform {
+impl<'a> Tickable for Platform<'a> {
     fn tick(&mut self) {}
 }
 
-impl Drawable for Platform {
-    fn get_rect(&self) -> Rect {
-        self.rect
+impl<'a> Drawable for Platform<'a> {
+    fn get_surface(&self) -> Surface {
+        self.surface
     }
 }
