@@ -1,33 +1,23 @@
-use drawable::Drawable;
 use tickable::Tickable;
 use player::Player;
-use input;
-
-trait DTAble: Tickable + Drawable {}
-impl<T> DTAble for T where T: Tickable + Drawable {}
 
 pub struct World<'a> {
-    things: Vec<&'a mut DTAble>,
-    player: &'a mut Player<'a>
+    things: Vec<&'a mut Tickable>,
 }
 
 impl<'a> World<'a> {
     pub fn new(player: &'a mut Player) -> Self {
-        World {things: Vec::new(), player: player}
+        World {things: Vec::new()}
     }
     pub fn tick(&mut self) {
-        //input::move_player(event, &mut self.player);
         for t in &mut self.things {
             t.tick();
         }
     }
-    pub fn add_thing(&mut self, thing: &'a mut DTAble) {
+    pub fn add_thing(&mut self, thing: &'a mut Tickable) {
         self.things.push(thing);
     }
-    pub fn get_things(&self) -> &Vec<&'a mut DTAble> {
+    pub fn get_things(&self) -> &Vec<&'a mut Tickable> {
         &self.things
-    }
-    pub fn get_player(&self) -> &Player {
-        self.player
     }
 }

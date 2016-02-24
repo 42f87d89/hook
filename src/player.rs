@@ -1,10 +1,14 @@
+use sdl2::rect::Rect;
+use sdl2::surface::Surface;
+use std::path::Path;
+
 use drawable::Drawable;
 use tickable::Tickable;
 use dot::Dot;
 use vect::Vect;
 
-
 pub struct Player<'a> {
+    surface: Surface<'a>,
     rect: Rect,
 	dot: Dot,
     pub up: bool,
@@ -14,8 +18,17 @@ pub struct Player<'a> {
 }
 
 impl<'a> Player<'a> {
-    pub fn new(rect: Rect) -> Self {
-        Player {rect: rect, dot: Dot::new(rect.x as f64, rect.y as f64), up: false, down: false, left: false, right: false}
+    pub fn new(x: i32, y: i32) -> Self {
+        let surface = match Surface::load_bmp(&Path::new("assets/Wood.bmp")) {
+			Ok(surface) => surface,
+			Err(err)    => panic!("failed to load surface")
+		};
+        Player {
+            surface: surface,
+            rect: Rect::new(x, y, 20, 80),
+            dot: Dot::new(x as f64, y as f64),
+            up: false, down: false, left: false, right: false
+        }
     }
 }
 
@@ -42,13 +55,13 @@ impl<'a> Tickable for Player<'a> {
         self.dot.move_it();
         self.dot.apply_friction(1.0);
         
-		self.rect.x = self.dot.get_pos().x as i16;
-		self.rect.y = self.dot.get_pos().y as i16;
+		self.rect.set_x(self.dot.get_pos().x as i32);
+		self.rect.set_y(self.dot.get_pos().y as i32);
     }
 }
 
 impl<'a> Drawable for Player<'a> {
-    fn get_surface(&self) -> Surface {
-        self.surface
+    fn get_surface(&self) -> &Surface {
+        &self.surface
     }
 }
