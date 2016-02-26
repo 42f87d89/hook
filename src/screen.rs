@@ -13,30 +13,18 @@ pub struct Screen {
 impl Screen {
 	pub fn init(width: u32, height: u32, ctx: &Sdl) -> Self {
 		let video_ctx = ctx.video().unwrap();
-	
+
 		let window  = match video_ctx.window("Hook", width, height).position_centered().opengl().build() {
 			Ok(window) => window,
 			Err(err)   => panic!("failed to create window")
 		};
-	
+
 		let mut renderer = match window.renderer().build() {
 			Ok(renderer) => renderer,
 			Err(err) => panic!("failed to create renderer")
 		};
-		
+
 		Screen {renderer: renderer}		
-	}
-	pub fn dothethings(self, ctx: Sdl) {
-		// loop until we receive a QuitEvent
-		let mut events = ctx.event_pump().unwrap();
-		'event : loop {
-			for event in events.poll_iter() {
-				match event {
-					Event::Quit{..} => break 'event,
-					_               => continue
-				}
-			}
-		}
 	}
 	pub fn draw(&mut self, surfaces: Vec<Surface>) {
 		for surface in surfaces {
@@ -46,7 +34,7 @@ impl Screen {
 				Ok(texture) => texture,
 				Err(err)    => panic!("failed to convert surface")
 			};
-			
+
 			let _ = self.renderer.clear();
 			// Display the texture.
 			// Omitting the src & dst Rect arguments will cause our image to stretch across the entire buffer.

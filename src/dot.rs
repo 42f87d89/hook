@@ -27,11 +27,12 @@ impl Dot {
     pub fn get_pos(&self) -> Vect {
         self.pos
     }
-    pub fn apply_friction(&mut self, k: f64) {
-        println!("{} {}", self.acc.x, self.acc.y);
-        let mut v = self.vel.clone();
-        let acc = self.acc;
-        v.scale(-k);
-        self.set_force(acc+v);
+    pub fn cap_speed(&mut self, max: f64) {
+        
+    }
+    pub fn apply_friction(&mut self, friction: f64) {
+        if self.acc.size() == 0. {
+            
+        }
     }
 }

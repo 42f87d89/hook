@@ -35,15 +35,15 @@ impl<'a> Player<'a> {
 impl<'a> Tickable for Player<'a> {
     fn tick(&mut self) {
         let mut acc = Vect {x:0., y: 0.};
-        if self.up {
+        if self.up && !self.down {
             acc.y = -0.01;
         } else if self.down {
             acc.y = 0.01;
         } else {
             acc.y = 0.;
         }
-        
-        if self.left {
+
+        if self.left && !self.right {
             acc.x = -0.01;
         } else if self.right {
             acc.x = 0.01;
@@ -53,8 +53,10 @@ impl<'a> Tickable for Player<'a> {
         self.dot.set_force(acc);
         self.dot.accelerate();
         self.dot.move_it();
-        self.dot.apply_friction(1.0);
         
+        self.dot.cap_speed(3.0);
+        self.dot.apply_friction(1.0);
+
 		self.rect.set_x(self.dot.get_pos().x as i32);
 		self.rect.set_y(self.dot.get_pos().y as i32);
     }
