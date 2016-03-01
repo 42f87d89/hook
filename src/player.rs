@@ -1,20 +1,24 @@
 use sdl2::rect::Rect;
 use sdl2::surface::Surface;
+use sdl2::event::Event;
+use sdl2::keyboard::Keycode;
 use std::path::Path;
+use std::cell::Cell;
 
 use drawable::Drawable;
 use tickable::Tickable;
 use dot::Dot;
 use vect::Vect;
+use input::Input;
 
 pub struct Player<'a> {
     surface: Surface<'a>,
-    rect: Rect,
+    pub rect: Rect,
 	dot: Dot,
-    pub up: bool,
-    pub down: bool,
-    pub left: bool,
-    pub right: bool,
+    pub up: Cell<bool>,
+    pub down: Cell<bool>,
+    pub left: Cell<bool>,
+    pub right: Cell<bool>,
 }
 
 impl<'a> Player<'a> {
@@ -27,35 +31,34 @@ impl<'a> Player<'a> {
             surface: surface,
             rect: Rect::new(x, y, 20, 80),
             dot: Dot::new(x as f64, y as f64),
-            up: false, down: false, left: false, right: false
+            up: Cell::new(false),
+            down: Cell::new(false),
+            left: Cell::new(false),
+            right: Cell::new(false)
         }
     }
 }
 
 impl<'a> Tickable for Player<'a> {
     fn tick(&mut self) {
-        let mut acc = Vect {x:0., y: 0.};
-        if self.up && !self.down {
-            acc.y = -0.01;
-        } else if self.down {
-            acc.y = 0.01;
-        } else {
-            acc.y = 0.;
-        }
-
-        if self.left && !self.right {
-            acc.x = -0.01;
-        } else if self.right {
-            acc.x = 0.01;
-        } else {
-            acc.x = 0.;
-        }
-        self.dot.set_force(acc);
-        self.dot.accelerate();
-        self.dot.move_it();
-        
-        self.dot.cap_speed(3.0);
-        self.dot.apply_friction(1.0);
+        let acc1 = 0.5;
+        let acc = Vect {
+            x:if self.left.get() && !self.right.get() {
+                -acc1
+            } else if self.right.get() {
+                acc1
+            } else {
+                0.
+            },
+            y: if self.up.get() && !self.down.get() {
+                -acc1
+            } else if self.down.get() {
+                acc1
+            } else {
+                0.
+            }
+        };
+        self.dot.tick(acc, 5.0);
 
 		self.rect.set_x(self.dot.get_pos().x as i32);
 		self.rect.set_y(self.dot.get_pos().y as i32);

@@ -1,9 +1,18 @@
-use std::ops::{Add, Sub};
+use std::ops::{Add, Sub, Mul};
 
 #[derive(Clone, Copy)]
 pub struct Vect {
     pub x: f64,
     pub y: f64,
+}
+
+impl Vect {
+    pub fn size(&self) -> f64 {
+        (self.x*self.x + self.y*self.y).sqrt()
+    }
+    pub fn norm(&self) -> Vect {
+        (1./self.size())*(*self)
+    }
 }
 
 impl Add for Vect {
@@ -20,12 +29,9 @@ impl Sub for Vect {
     }
 }
 
-impl Vect {
-    pub fn size(&self) -> f64 {
-        (self.x*self.x + self.y*self.y).sqrt()
-    }
-    pub fn scale(&mut self, r: f64) {
-        self.x *= r;
-        self.y *= r;
+impl Mul<Vect> for f64 {
+    type Output = Vect;
+    fn mul(self, rhs: Vect) -> Vect {
+        Vect {x: self*rhs.x, y: self*rhs.y}
     }
 }

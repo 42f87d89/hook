@@ -6,7 +6,7 @@ pub struct World<'a> {
 }
 
 impl<'a> World<'a> {
-    pub fn new(player: &'a mut Player) -> Self {
+    pub fn new() -> Self {
         World {things: Vec::new()}
     }
     pub fn tick(&mut self) {

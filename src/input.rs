@@ -3,12 +3,12 @@ use sdl2::event::Event;
 
 use tickable::Tickable;
 
-pub struct Input {
+pub struct Input<'a> {
 	context: Sdl,
-	handlers: Vec<Box<FnMut(&Event)>>,
+	handlers: Vec<Box<FnMut(&Event) + 'a>>,
 }
 
-impl Input {
+impl<'a> Input<'a> {
 	pub fn new(context: Sdl) -> Self {
 		Input {context: context, handlers: Vec::new()}
 	}
@@ -20,7 +20,7 @@ impl Input {
 			}
         }
 	}
-	pub fn add_handler(&mut self, handler: Box<FnMut(&Event)>) {
+	pub fn add_handler(&mut self, handler: Box<FnMut(&Event) + 'a>) {
 		self.handlers.push(handler);
 	}
 }

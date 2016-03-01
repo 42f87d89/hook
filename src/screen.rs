@@ -26,8 +26,8 @@ impl Screen {
 
 		Screen {renderer: renderer}		
 	}
-	pub fn draw(&mut self, surfaces: Vec<Surface>) {
-		for surface in surfaces {
+	pub fn draw(&mut self, surfaces: Vec<(i32,i32,&Surface)>) {
+		for (x,y,surface) in surfaces {
 			// Convert a surface to a texture.
 			// Textures can be used more efficiently by the GPU. (If one is available.)
 			let texture = match self.renderer.create_texture_from_surface(&surface) {
@@ -39,7 +39,10 @@ impl Screen {
 			// Display the texture.
 			// Omitting the src & dst Rect arguments will cause our image to stretch across the entire buffer.
 			// Try passing Some(surface.get_rect()) for src & dst instead of None & see how things change.
-			let _ = self.renderer.copy(&texture, None, None);
+			let mut rect = surface.rect();
+			rect.set_x(x);
+			rect.set_y(y);
+			let _ = self.renderer.copy(&texture, None, Some(rect));
 			let _ = self.renderer.present();
 		}
 	}
