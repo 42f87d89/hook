@@ -32,6 +32,12 @@ impl Dot {
     pub fn get_pos(&self) -> Vect {
         self.pos
     }
+    pub fn get_vel(&self) -> Vect {
+        self.vel
+    }
+    pub fn get_acc(&self) -> Vect {
+        self.acc
+    }
     fn cap_speed(&mut self, max: f64) {
         if self.vel.size() > max {
             self.vel = max*self.vel.norm();

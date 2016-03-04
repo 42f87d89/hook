@@ -35,25 +35,25 @@ fn main() {
         let player = player.borrow_mut();
         match evt {
             &Event::KeyDown {keycode: Some(keycode), ..} => {
+                let mut ver = 0;
+                let mut hor = 0;
                 if keycode == Keycode::W {
-                    player.up.set(true);
+                    ver += -1;
                 } else if keycode == Keycode::S {
-                    player.down.set(true);
+                    ver += 1;
                 } else if keycode == Keycode::A {
-                    player.left.set(true);
+                    hor += -1;
                 } else if keycode == Keycode::D {
-                    player.right.set(true);
+                    hor += 1;
                 }
+                player.hor.set(hor);
+                player.ver.set(ver);
             }
-            &Event::KeyUp {keycode: Some(keycode), ..} => {
-                if keycode == Keycode::W {
-                    player.up.set(false);
-                } else if keycode == Keycode::S {
-                    player.down.set(false);
-                } else if keycode == Keycode::A {
-                    player.left.set(false);
-                } else if keycode == Keycode::D {
-                    player.right.set(false);
+            &Event::KeyUp {keycode: Some(keycode), ..} => { // Might cause 1 frame of lag when letting go of one direction, then immediately pressing another
+                if keycode == Keycode::W || keycode == Keycode::S {
+                    player.ver.set(0);
+                } else if keycode == Keycode::A || keycode == Keycode::D {
+                    player.hor.set(0);
                 }
             }
             _ => {}

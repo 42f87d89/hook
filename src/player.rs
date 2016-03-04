@@ -15,10 +15,8 @@ pub struct Player<'a> {
     surface: Surface<'a>,
     pub rect: Rect,
 	dot: Dot,
-    pub up: Cell<bool>,
-    pub down: Cell<bool>,
-    pub left: Cell<bool>,
-    pub right: Cell<bool>,
+    pub ver: Cell<i8>,
+    pub hor: Cell<i8>,
 }
 
 impl<'a> Player<'a> {
@@ -31,37 +29,24 @@ impl<'a> Player<'a> {
             surface: surface,
             rect: Rect::new(x, y, 20, 80),
             dot: Dot::new(x as f64, y as f64),
-            up: Cell::new(false),
-            down: Cell::new(false),
-            left: Cell::new(false),
-            right: Cell::new(false)
+            ver: Cell::new(0),
+            hor: Cell::new(0)
         }
     }
 }
 
 impl<'a> Tickable for Player<'a> {
     fn tick(&mut self) {
-        let acc1 = 0.5;
-        let acc = Vect {
-            x:if self.left.get() && !self.right.get() {
-                -acc1
-            } else if self.right.get() {
-                acc1
-            } else {
-                0.
-            },
-            y: if self.up.get() && !self.down.get() {
-                -acc1
-            } else if self.down.get() {
-                acc1
-            } else {
-                0.
-            }
-        };
-        self.dot.tick(acc, 5.0);
-
-		self.rect.set_x(self.dot.get_pos().x as i32);
-		self.rect.set_y(self.dot.get_pos().y as i32);
+        let acc_scale = 0.5;
+        let fric_scale = -0.2;
+        let max_speed = 5.0;
+        
+        let mut acc = acc_scale*Vect {x: self.hor.get() as f64, y: self.ver.get() as f64}.norm();
+        let fric = fric_scale*self.dot.get_vel().norm();
+        self.dot.tick(acc+fric, max_speed);
+        
+		self.rect.set_x(self.dot.get_pos().x.round() as i32);
+		self.rect.set_y(self.dot.get_pos().y.round() as i32);
     }
 }
 

@@ -11,7 +11,11 @@ impl Vect {
         (self.x*self.x + self.y*self.y).sqrt()
     }
     pub fn norm(&self) -> Vect {
-        (1./self.size())*(*self)
+        if self.x == 0. && self.y == 0. {
+            Vect {x: 0., y: 0.}
+        } else {
+            (1./self.size())*(*self)
+        }
     }
 }
 
