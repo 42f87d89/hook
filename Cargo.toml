@@ -5,3 +5,5 @@ authors = ["gustavo <gbuschle@hotmail.com>"]
 
 [dependencies]
 sdl2 = "*"
+ncollide = "*"
+specs = "*"
